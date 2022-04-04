@@ -123,6 +123,20 @@ pub mod give_me {
         }
 
         #[ink::test]
+        fn check_account_id() {
+            let accounts = default_accounts();
+            let contract_id = ink_env::account_id::<ink_env::DefaultEnvironment>();
+            let give_me = create_contract(100);
+            ink_env::test::set_callee::<ink_env::DefaultEnvironment>(contract_id);
+            ink_env::test::set_caller::<ink_env::DefaultEnvironment>(accounts.bob);
+
+            assert_eq!(
+                give_me.get_id(),
+                contract_id
+            );
+        }
+
+        #[ink::test]
         #[should_panic(expected = "payment was not ten")]
         fn test_transferred_value_must_fail() {
             // given
